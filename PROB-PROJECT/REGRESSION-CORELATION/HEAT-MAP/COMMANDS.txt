@@ -1,0 +1,24 @@
+
+################## correlation analysis and creates an interactive 
+##################   heatmap to visualize how strongly numeric 
+##################          variables are correlated.
+##########################################################################################
+
+# Load necessary libraries
+library(dplyr)
+library(plotly)
+# Select numeric columns (excluding Student_ID)
+numeric_data <- data[, sapply(data, is.numeric)]
+numeric_data <- subset(numeric_data, select = -Student_ID)
+# Compute correlation matrix
+cor_matrix <- cor(numeric_data, use = "complete.obs")
+# Create interactive correlation heatmap
+heatmap_plot <- plot_ly(
+  x = colnames(cor_matrix),
+  y = rownames(cor_matrix),
+  z = cor_matrix,
+  type = "heatmap",
+  colorscale = "Viridis"
+)
+# Display the heatmap
+heatmap_plot

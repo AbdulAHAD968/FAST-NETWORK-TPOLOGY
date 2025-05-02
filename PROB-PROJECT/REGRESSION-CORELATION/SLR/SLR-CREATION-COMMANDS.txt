@@ -1,0 +1,94 @@
+################################################################################################
+SLR
+################
+1. 
+
+# Simple Linear Regression: Grades ~ Study_Hours_Per_Day
+slr_model <- lm(Grades ~ Study_Hours_Per_Day, data = data)
+summary(slr_model)
+# Plot
+library(ggplot2)
+ggplot(data, aes(x = Study_Hours_Per_Day, y = Grades)) +
+  geom_point(color = "steelblue", alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE, color = "darkred") +
+  labs(title = "Simple Linear Regression: Study Hours vs Grades",
+       x = "Study Hours Per Day",
+       y = "Grades") +
+  theme_minimal()
+
+################
+2.
+
+# Fit model [Grades ~ Sleep_Hours_Per_Day]
+slr_sleep <- lm(Grades ~ Sleep_Hours_Per_Day, data = data)
+summary(slr_sleep)
+# Plot
+ggplot(data, aes(x = Sleep_Hours_Per_Day, y = Grades)) +
+  geom_point(color = "purple", alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE, color = "darkgreen") +
+  labs(title = "SLR: Sleep Hours vs Grades", x = "Sleep Hours", y = "Grades") +
+  theme_minimal()
+
+################
+3.
+
+# Grades ~ Social_Hours_Per_Day
+slr_social <- lm(Grades ~ Social_Hours_Per_Day, data = data)
+summary(slr_social)
+# plot
+ggplot(data, aes(x = Social_Hours_Per_Day, y = Grades)) +
+  geom_point(color = "orange", alpha = 0.6) +
+  geom_smooth(method = "lm", color = "red") +
+  labs(title = "SLR: Social Hours vs Grades",
+       x = "Social Hours Per Day", y = "Grades") +
+  theme_minimal()
+
+################
+4.
+
+# Grades ~ Physical_Activity_Hours_Per_Day
+slr_physical <- lm(Grades ~ Physical_Activity_Hours_Per_Day, data = data)
+summary(slr_physical)
+
+ggplot(data, aes(x = Physical_Activity_Hours_Per_Day, y = Grades)) +
+  geom_point(color = "forestgreen", alpha = 0.6) +
+  geom_smooth(method = "lm", color = "blue") +
+  labs(title = "SLR: Physical Activity vs Grades",
+       x = "Physical Activity Hours", y = "Grades") +
+  theme_minimal()
+
+################
+5.
+
+# Grades ~ Extracurricular_Hours_Per_Day
+slr_extra <- lm(Grades ~ Extracurricular_Hours_Per_Day, data = data)
+summary(slr_extra)
+
+ggplot(data, aes(x = Extracurricular_Hours_Per_Day, y = Grades)) +
+  geom_point(color = "coral", alpha = 0.6) +
+  geom_smooth(method = "lm", color = "navy") +
+  labs(title = "SLR: Extracurricular Activities vs Grades",
+       x = "Extracurricular Hours", y = "Grades") +
+  theme_minimal()
+
+
+################
+6.
+
+# total of all the activities
+data$Total_Activity <- data$Study_Hours_Per_Day + data$Extracurricular_Hours_Per_Day + data$Physical_Activity_Hours_Per_Day
+
+#calculation
+slr_total_activity <- lm(Grades ~ Total_Activity, data = data)
+summary(slr_total_activity)
+
+# plotting
+ggplot(data, aes(x = Total_Activity, y = Grades)) +
+  geom_point(color = "brown", alpha = 0.6) +
+  geom_smooth(method = "lm", color = "blue") +
+  labs(title = "SLR: Total Activity vs Grades",
+       x = "Total Activity Hours", y = "Grades") +
+  theme_minimal()
+
+#################
+

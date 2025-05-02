@@ -1,0 +1,114 @@
+##########################################################################################
+MLR
+################
+
+# Regression Analysis
+# Linear regression: Grades predicted by lifestyle factors
+model <- lm(Grades ~ Study_Hours_Per_Day + Sleep_Hours_Per_Day +
+              Social_Hours_Per_Day + Extracurricular_Hours_Per_Day +
+              Physical_Activity_Hours_Per_Day, data = data)
+
+# Summary of the model
+summary(model)
+
+################
+
+# Predict grades using the model
+data$Predicted_Grades <- predict(model, data)
+# Interactive scatter plot
+plot_ly(data, x = ~Grades, y = ~Predicted_Grades,
+        type = 'scatter', mode = 'markers',
+        marker = list(color = 'blue'),
+        text = ~paste('Study Hours:', Study_Hours_Per_Day),
+        hoverinfo = 'text+x+y') %>%
+  layout(title = 'Actual vs Predicted Grades',
+         xaxis = list(title = 'Actual Grades'),
+         yaxis = list(title = 'Predicted Grades'))
+
+
+
+#####################################################################
+
+# load the libraries before doing anything.
+
+library(ggplot2)
+library(plotly)
+
+
+################
+1. ✅ Model 1: Study Hours + Sleep Hours
+
+model1 <- lm(Grades ~ Study_Hours_Per_Day + Sleep_Hours_Per_Day, data = data)
+summary(model1)
+
+data$Predicted_Model1 <- predict(model1, data)
+
+# Interactive Scatter with ggplotly
+p1 <- ggplot(data, aes(x = Grades, y = Predicted_Model1)) +
+  geom_point(aes(color = Study_Hours_Per_Day), alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE, color = "darkred") +
+  labs(title = "Model 1: Actual vs Predicted Grades (Study + Sleep)",
+       x = "Actual Grades", y = "Predicted Grades") +
+  theme_minimal()
+ggplotly(p1)
+
+
+################
+2. ✅ Model 2: Study Hours + Sleep Hours + Social Hours
+
+model2 <- lm(Grades ~ Study_Hours_Per_Day + Sleep_Hours_Per_Day + Social_Hours_Per_Day, data = data)
+summary(model2)
+
+data$Predicted_Model2 <- predict(model2, data)
+
+p2 <- ggplot(data, aes(x = Grades, y = Predicted_Model2)) +
+  geom_point(aes(color = Social_Hours_Per_Day), alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE, color = "darkblue") +
+  labs(title = "Model 2: Actual vs Predicted Grades (Add Social Time)",
+       x = "Actual Grades", y = "Predicted Grades") +
+  theme_minimal()
+ggplotly(p2)
+
+
+################
+3. ✅ Model 3: Study Hours + Sleep Hours + Social Hours + Extracurricular Time
+
+model3 <- lm(Grades ~ Study_Hours_Per_Day + Sleep_Hours_Per_Day +
+               Social_Hours_Per_Day + Extracurricular_Hours_Per_Day, data = data)
+summary(model3)
+
+data$Predicted_Model3 <- predict(model3, data)
+
+p3 <- ggplot(data, aes(x = Grades, y = Predicted_Model3)) +
+  geom_point(aes(color = Extracurricular_Hours_Per_Day), alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE, color = "orange") +
+  labs(title = "Model 3: Actual vs Predicted Grades (+Extracurricular)",
+       x = "Actual Grades", y = "Predicted Grades") +
+  theme_minimal()
+ggplotly(p3)
+
+
+################
+
+################
+
+
+
+################
+
+# Part 1: Visualize Residuals
+
+# Residuals vs Fitted
+plot(model$fitted.values, model$residuals,
+     xlab = "Fitted Values", ylab = "Residuals",
+     main = "Residuals vs Fitted")
+abline(h = 0, col = "red")
+
+# Q-Q Plot
+qqnorm(model$residuals)
+qqline(model$residuals, col = "blue")
+
+################
+
+
+
