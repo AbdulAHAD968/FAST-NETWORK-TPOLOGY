@@ -1,0 +1,14 @@
+   Student_ID     Study_Hours_Per_Day Extracurricular_Hours_Per_Day Sleep_Hours_Per_Day Social_Hours_Per_Day Physical_Activity_Hours_Per_Day Stress_Level      
+ Min.   :   1.0   Min.   : 5.000      Min.   :-2.000                Min.   : 4.989      Min.   :-1.000       Min.   :-3.000                  Length:1912       
+ 1st Qu.: 498.8   1st Qu.: 6.300      1st Qu.: 1.000                1st Qu.: 6.200      1st Qu.: 1.200       1st Qu.: 2.400                  Class :character  
+ Median : 999.0   Median : 7.450      Median : 2.000                Median : 7.500      Median : 2.600       Median : 4.150                  Mode  :character  
+ Mean   :1000.7   Mean   : 7.478      Mean   : 1.991                Mean   : 7.500      Mean   : 2.692       Mean   : 4.304                                    
+ 3rd Qu.:1503.2   3rd Qu.: 8.700      3rd Qu.: 3.000                3rd Qu.: 8.700      3rd Qu.: 4.100       3rd Qu.: 6.100                                    
+ Max.   :2000.0   Max.   :10.129      Max.   : 4.302                Max.   :10.151      Max.   : 6.000       Max.   :11.600                                    
+    Gender              Grades      
+ Length:1912        Min.   : 5.620  
+ Class :character   1st Qu.: 7.250  
+ Mode  :character   Median : 7.800  
+                    Mean   : 7.797  
+                    3rd Qu.: 8.320  
+                    Max.   :10.000  

@@ -1,0 +1,154 @@
+getwd()
+setwd("C:/path/to/your/folder")
+list.files()
+
+view(data)                 # View it in a spreadsheet format
+str(data)                  # Understand data types
+summary(data)              # View basic stats
+colSums(is.na(data))       # Checked missing values per column
+
+# Convert numeric columns that are mistakenly read as characters
+data$Study_Hours_Per_Day <- as.numeric(data$Study_Hours_Per_Day)
+data$Grades <- as.numeric(data$Grades)
+
+# Convert categorical columns to factors
+data$Stress_Level <- as.factor(data$Stress_Level)
+data$Gender <- as.factor(data$Gender)
+
+# Replace NA in numeric columns with column mean
+data$Extracurricular_Hours_Per_Day[is.na(data$Extracurricular_Hours_Per_Day)] <- mean(data$Extracurricular_Hours_Per_Day, na.rm = TRUE)
+data$Sleep_Hours_Per_Day[is.na(data$Sleep_Hours_Per_Day)] <- mean(data$Sleep_Hours_Per_Day, na.rm = TRUE)
+data$Social_Hours_Per_Day[is.na(data$Social_Hours_Per_Day)] <- mean(data$Social_Hours_Per_Day, na.rm = TRUE)
+data$Physical_Activity_Hours_Per_Day[is.na(data$Physical_Activity_Hours_Per_Day)] <- mean(data$Physical_Activity_Hours_Per_Day, na.rm = TRUE)
+
+# Remove duplicates.
+data <- data[!duplicated(data), ]
+
+# gender FIXME
+# Convert to lowercase for consistency
+data$Gender <- tolower(data$Gender)
+# Fix common typos and unknowns
+data$Gender[data$Gender %in% c("femal", "female", "femaale", "f")] <- "female"
+data$Gender[data$Gender %in% c("male", "m")] <- "male"
+data$Gender[!data$Gender %in% c("male", "female")] <- NA  # Mark others as missing
+# Optional: Fill NA with most frequent value
+most_common_gender <- names(sort(table(data$Gender), decreasing = TRUE))[1]
+data$Gender[is.na(data$Gender)] <- most_common_gender
+
+# Stress FIXME
+# Convert to lowercase
+data$Stress_Level <- tolower(data$Stress_Level)
+# Replace typos and spaces
+data$Stress_Level <- trimws(data$Stress_Level)  # remove extra spaces
+data$Stress_Level[data$Stress_Level %in% c("high", "hig", "h")] <- "high"
+data$Stress_Level[data$Stress_Level %in% c("moderate", "mod", "moder")] <- "moderate"
+data$Stress_Level[data$Stress_Level %in% c("low", "l")] <- "low"
+data$Stress_Level[!data$Stress_Level %in% c("low", "moderate", "high")] <- NA
+# Optional: Fill NA with most frequent level
+most_common_stress <- names(sort(table(data$Stress_Level), decreasing = TRUE))[1]
+data$Stress_Level[is.na(data$Stress_Level)] <- most_common_stress
+
+# save the updated data to file.
+write.csv(data, "cleaned_student_data.csv", row.names = FALSE)
+
+# Save summary output to a text file [just for data backup]
+sink("summary_output.txt")
+summary(data)
+sink()
+
+# Save describe output to a text file
+sink("describe_output.txt")
+print(describe(data))
+sink()
+
+# 1. Interactive grade distribution x and y
+p1 <- ggplot(data, aes(x = Grades)) +
+  geom_histogram(binwidth = 1, fill = 'skyblue', color = 'black') +
+  labs(title = "Distribution of Grades", x = "Grades", y = "Count")
+ggplotly(p1)
+
+# 2. Interactive Boxplot: Grades by Gender
+p2 <- ggplot(data, aes(x = Gender, y = Grades, fill = Gender)) +
+  geom_boxplot() +
+  labs(title = "Grades by Gender", x = "Gender", y = "Grades")
+ggplotly(p2)
+
+# 3. Interactive Boxplot: Grades by Stress Level
+p3 <- ggplot(data, aes(x = Stress_Level, y = Grades, fill = Stress_Level)) +
+  geom_boxplot() +
+  labs(title = "Grades by Stress Level", x = "Stress Level", y = "Grades")
+ggplotly(p3)
+
+# 4. Study Hours vs Grades:
+p4 <- ggplot(data, aes(x = Study_Hours_Per_Day, y = Grades)) +
+  geom_point(color = "steelblue") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(title = "Study Hours vs Grades", x = "Study Hours", y = "Grades")
+ggplotly(p4)
+
+# 5. Sleep Hours vs Grades
+p5 <- ggplot(data, aes(x = Sleep_Hours_Per_Day, y = Grades)) +
+  geom_point(color = "purple") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(title = "Sleep Hours vs Grades", x = "Sleep Hours", y = "Grades")
+ggplotly(p5)
+
+# 6. Social Hours vs Grades
+p6 <- ggplot(data, aes(x = Social_Hours_Per_Day, y = Grades)) +
+  geom_point(color = "orange") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(title = "Social Hours vs Grades", x = "Social Hours", y = "Grades")
+ggplotly(p6)
+
+# 7. Physical Activity vs Grades:
+p7 <- ggplot(data, aes(x = Physical_Activity_Hours_Per_Day, y = Grades)) +
+  geom_point(color = "green") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(title = "Physical Activity vs Grades", x = "Physical Activity Hours", y = "Grades")
+ggplotly(p7)
+
+# 8. Extracurricular Hours vs Grades
+p8 <- ggplot(data, aes(x = Extracurricular_Hours_Per_Day, y = Grades)) +
+  geom_point(color = "coral") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(title = "Extracurricular Hours vs Grades", x = "Extracurricular Hours", y = "Grades")
+ggplotly(p8)
+
+# 9. Stress Level by Gender:
+P9 <- ggplot(data, aes(x = Stress_Level, fill = Gender)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Stress Level Count by Gender", x = "Stress Level", y = "Count")
+ggplotly(p9)
+
+# 10. Study Hours by Stress Level:
+p10 <- ggplot(data, aes(x = Stress_Level, y = Study_Hours_Per_Day, fill = Stress_Level)) +
+  geom_boxplot() +
+  labs(title = "Study Hours by Stress Level", x = "Stress Level", y = "Study Hours")
+ggplotly(p10)
+
+# 11. Sleep Hours by Stress Level
+p11 <- ggplot(data, aes(x = Stress_Level, y = Sleep_Hours_Per_Day, fill = Stress_Level)) +
+  geom_boxplot() +
+  labs(title = "Sleep Hours by Stress Level", x = "Stress Level", y = "Sleep Hours")
+ggplotly(p11)
+
+# 12. Physical Activity by Gender
+p12 <- ggplot(data, aes(x = Gender, y = Physical_Activity_Hours_Per_Day, fill = Gender)) +
+  geom_boxplot() +
+  labs(title = "Physical Activity by Gender", x = "Gender", y = "Physical Activity")
+ggplotly(p12)
+
+# 13. Social Hours by Gender:
+p13 <- ggplot(data, aes(x = Gender, y = Social_Hours_Per_Day, fill = Gender)) +
+  geom_boxplot() +
+  labs(title = "Social Hours by Gender", x = "Gender", y = "Social Hours")
+ggplotly(p13)
+
+# 14. Combined Activity Time vs Grades
+data$Total_Activity <- data$Study_Hours_Per_Day + data$Extracurricular_Hours_Per_Day + data$Physical_Activity_Hours_Per_Day
+p15 <- ggplot(data, aes(x = Total_Activity, y = Grades)) +
+  geom_point(color = "brown") +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  labs(title = "Total Productive Activity vs Grades", x = "Total Activity Hours", y = "Grades")
+ggplotly(p15)
+

@@ -1,0 +1,45 @@
+##########################################################################################
+MLR
+################
+
+# Regression Analysis
+# Linear regression: Grades predicted by lifestyle factors
+model <- lm(Grades ~ Study_Hours_Per_Day + Sleep_Hours_Per_Day +
+              Social_Hours_Per_Day + Extracurricular_Hours_Per_Day +
+              Physical_Activity_Hours_Per_Day, data = data)
+
+# Summary of the model
+summary(model)
+
+################
+
+# Predict grades using the model
+data$Predicted_Grades <- predict(model, data)
+# Interactive scatter plot
+plot_ly(data, x = ~Grades, y = ~Predicted_Grades,
+        type = 'scatter', mode = 'markers',
+        marker = list(color = 'blue'),
+        text = ~paste('Study Hours:', Study_Hours_Per_Day),
+        hoverinfo = 'text+x+y') %>%
+  layout(title = 'Actual vs Predicted Grades',
+         xaxis = list(title = 'Actual Grades'),
+         yaxis = list(title = 'Predicted Grades'))
+
+################
+
+# Part 1: Visualize Residuals
+
+# Residuals vs Fitted
+plot(model$fitted.values, model$residuals,
+     xlab = "Fitted Values", ylab = "Residuals",
+     main = "Residuals vs Fitted")
+abline(h = 0, col = "red")
+
+# Q-Q Plot
+qqnorm(model$residuals)
+qqline(model$residuals, col = "blue")
+
+################
+
+
+
