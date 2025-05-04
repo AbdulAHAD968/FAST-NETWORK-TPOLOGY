@@ -1,0 +1,88 @@
+
+#################
+
+data <- read.csv("unclean.csv")
+
+#################
+
+summary(data)
+
+#################
+
+library(psych)
+describe(data)
+
+#################
+
+get_all_modes <- function(x) {
+  if (all(is.na(x))) return(NA)
+  freq <- table(x)
+  modes <- freq[freq == max(freq)]
+  return(names(modes))
+}
+modes_list <- sapply(data, get_all_modes)
+print(modes_list)
+
+#################
+
+
+################################################################
+################################################################
+## THE INTERACTIVE BUBBLE GRAPH. 
+################################################################
+################################################################
+
+library(plotly)
+library(dplyr)
+
+# Ensure clean Gender values
+data$Gender <- tolower(data$Gender)
+data$Gender <- ifelse(data$Gender == "male", "Male",
+                      ifelse(data$Gender == "female", "Female", NA))
+
+# Filter by gender
+male_data <- filter(data, Gender == "Male")
+female_data <- filter(data, Gender == "Female")
+
+# Male plot
+p_male <- plot_ly(male_data,
+                  x = ~Study_Hours_Per_Day,
+                  y = ~Grades,
+                  type = 'scatter',
+                  mode = 'markers',
+                  color = ~Stress_Level,
+                  text = ~paste("ID:", Student_ID,
+                                "<br>Stress Level:", Stress_Level,
+                                "<br>Sleep:", Sleep_Hours_Per_Day),
+                  marker = list(size = ~Sleep_Hours_Per_Day * 4,
+                                sizemode = 'diameter',
+                                line = list(width = 1, color = '#FFFFFF')),
+                  hoverinfo = 'text') %>%
+  layout(title = "Male")
+
+# Female plot
+p_female <- plot_ly(female_data,
+                    x = ~Study_Hours_Per_Day,
+                    y = ~Grades,
+                    type = 'scatter',
+                    mode = 'markers',
+                    color = ~Stress_Level,
+                    text = ~paste("ID:", Student_ID,
+                                  "<br>Stress Level:", Stress_Level,
+                                  "<br>Sleep:", Sleep_Hours_Per_Day),
+                    marker = list(size = ~Sleep_Hours_Per_Day * 4,
+                                  sizemode = 'diameter',
+                                  line = list(width = 1, color = '#FFFFFF')),
+                    hoverinfo = 'text') %>%
+  layout(title = "Female")
+
+# Combine with subplot and custom titles
+subplot(p_male, p_female, nrows = 1, shareX = TRUE, shareY = TRUE, titleX = TRUE, titleY = TRUE) %>%
+  layout(title = "Grades vs Study Hours (Color: Stress Level)",
+         annotations = list(
+           list(x = 0.18, y = 1.05, text = "Male", showarrow = FALSE, xref='paper', yref='paper', font = list(size = 14)),
+           list(x = 0.82, y = 1.05, text = "Female", showarrow = FALSE, xref='paper', yref='paper', font = list(size = 14))
+         ),
+         height = 600,
+         xaxis = list(title = "Study Hours Per Day"),
+         yaxis = list(title = "Grades"))

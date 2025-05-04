@@ -1,7 +1,10 @@
 ##########################################################################################
 MLR
-################
 
+## NOT USED BUT SS AND SUMMARY AVAILABLE IN FOLDER. GO AD CHECK IT OUT.
+################
+library(ggplot2)
+library(plotly)
 # Regression Analysis
 # Linear regression: Grades predicted by lifestyle factors
 model <- lm(Grades ~ Study_Hours_Per_Day + Sleep_Hours_Per_Day +
@@ -26,7 +29,7 @@ plot_ly(data, x = ~Grades, y = ~Predicted_Grades,
          yaxis = list(title = 'Predicted Grades'))
 
 
-
+## MAIN ON WHICH I WORKED ON
 #####################################################################
 
 # load the libraries before doing anything.
@@ -89,12 +92,58 @@ ggplotly(p3)
 
 
 ################
+# ✅ Model 4: Full Model (Add Physical Activity)
+
+model4 <- lm(Grades ~ Study_Hours_Per_Day + Sleep_Hours_Per_Day +
+               Social_Hours_Per_Day + Extracurricular_Hours_Per_Day +
+               Physical_Activity_Hours_Per_Day, data = data)
+summary(model4)
+
+data$Predicted_Model4 <- predict(model4, data)
+
+p4 <- ggplot(data, aes(x = Grades, y = Predicted_Model4)) +
+  geom_point(aes(color = Physical_Activity_Hours_Per_Day), alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE, color = "forestgreen") +
+  labs(title = "Model 4: Actual vs Predicted Grades (Full Model)",
+       x = "Actual Grades", y = "Predicted Grades") +
+  theme_minimal()
+ggplotly(p4)
+
+
+################
+#✅ Model 5: Full Model + Gender + Stress Level
+
+# Make sure categorical variables are treated as factors
+data$Gender <- as.factor(data$Gender)
+data$Stress_Level <- as.factor(data$Stress_Level)
+
+# Multiple Linear Regression with Gender and Stress Level
+model5 <- lm(Grades ~ Study_Hours_Per_Day + Sleep_Hours_Per_Day +
+               Social_Hours_Per_Day + Extracurricular_Hours_Per_Day +
+               Physical_Activity_Hours_Per_Day + Gender + Stress_Level,
+             data = data)
+summary(model5)
+
+# Predict grades with updated model
+data$Predicted_Model5 <- predict(model5, data)
+
+p5 <- ggplot(data, aes(x = Grades, y = Predicted_Model5)) +
+  geom_point(aes(color = Stress_Level), alpha = 0.7) +
+  geom_smooth(method = "lm", color = "purple", se = TRUE) +
+  facet_wrap(~Gender) +
+  labs(title = "Model 5: Actual vs Predicted Grades (Faceted by Gender)",
+       x = "Actual Grades", y = "Predicted Grades") +
+  theme_minimal()
+ggplotly(p5)
+
+
 
 ################
 
-
-
+########################################################################################
+# EXTRA:
 ################
+
 
 # Part 1: Visualize Residuals
 

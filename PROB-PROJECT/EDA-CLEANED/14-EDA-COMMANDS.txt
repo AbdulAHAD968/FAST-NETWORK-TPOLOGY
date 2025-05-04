@@ -286,4 +286,44 @@ gridExtra::grid.arrange(
 
 ############################################
 
+# 16. Distribution Plot: Grades by Gender (Violin Plot)
+
+library(ggplot2)
+library(plotly)
+
+p16 <- ggplot(data, aes(x = Gender, y = Grades, fill = Gender)) +
+  geom_violin(trim = FALSE) +
+  labs(title = "Distribution of Grades by Gender", x = "Gender", y = "Grades")
+ggplotly(p16)
+
+
+############################################
+
+# 17. Pie Chart
+# Pie Chart of Gender Distribution
+library(plotly)
+
+gender_counts <- table(data$Gender)
+gender_df <- data.frame(Gender = names(gender_counts), Count = as.numeric(gender_counts))
+
+plot_ly(gender_df, labels = ~Gender, values = ~Count, type = 'pie') %>%
+  layout(title = 'Gender Distribution')
+
+
+############################################
+
+# 18.
+# Pair Plot (numerical variable relationships)
+library(plotly)
+library(GGally)
+
+# Choose only a few relevant columns
+subset_data <- data[, c("Grades", "Study_Hours_Per_Day", "Sleep_Hours_Per_Day", "Social_Hours_Per_Day")]
+
+# Pair plot (static but fast)
+p_small <- ggpairs(subset_data)
+print(p_small)  # Optional, for static check
+
+
+############################################
 
